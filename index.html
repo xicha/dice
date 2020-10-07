@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="./jquery.js"></script>
+</head>
+<body>
+	<div><img src="img/a4_4.png" id="sai"></div>
+<button type="button" id="button">サイコロを振る</button>
+<!-- <p>ENTERか↑押してください</p> -->
+</body>
+</html>
+<style type="text/css">
+	body {
+    background: #FFDC73;
+    font-family: 'Oswald', sans-serif;
+}
+	div {
+  margin: 120px auto 50px;
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+ 
+#sai {
+  position: absolute;
+  top: 0;
+}
+ 
+button {
+  margin: -10px auto -15px;
+  width: 280px;
+  height: 60px;
+  background: #FF4000;
+  color: #FFF;
+  font-size: 24px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  display: block;
+}
+ 
+p {
+  text-align: center;
+  font-size: 30px;
+  width: auto;
+  height: 25px;
+}
+ 
+.bound {
+  animation: bound 1s ease-out 1;
+}
+@keyframes bound{
+  0% {top: 0;}
+  15% {top: -200px;}
+  35% {top: 0;}
+  55% {top: -120px;}
+  70% {top: 0;}
+  85% {top: -60px;}
+  100% {top: 0;}
+}
+</style>
+<script type="text/javascript">
+	var sainome;  //サイコロの出目
+var i = 4;  //サイコロの画像制御用の変数
+var j = 1;  //サイコロの画像制御用の変数
+var s = 0;  //サイコロの回転数確認用の変数
+var jAry = [4, 1, 3, 1, 3, 2]  //出目に対応した画像URLを作るためにjに入れる数字の配列
+//var saikoroImg = ['a4_4', 'a_1_4', 'b3_4', 'b1_4', 'a3_4', 'b2_4']
+ 
+//賽の目の決定
+function start(){
+  sainome = 1 + Math.floor( Math.random() * 6 );  //1～6の間で一つランダムな数字をsainomeに代入
+  j = jAry[sainome-1]  //jAryから出目に応じた順番の中身を取り出し変数jに取り出す
+  if(sainome == 3 || sainome == 4 || sainome == 6){  //出目が3.4.6の時
+    korogasu('b');  //引数に'b'を渡しkorogasu()を実行
+  } else {  //出目が1,2,5の時
+    korogasu('a');  //数に'a'を渡しkorogasu()を実行
+  }
+}
+ 
+//サイコロが転がる動き
+function korogasu(n){
+  var saiImg = setInterval(function(){
+    if(s <= 16){
+      if(i < 4) {
+        imgURL = 'img/' + n + j + '_' + i + '.png';
+        $('#sai').attr('src',imgURL);
+        i++;
+      } else {
+        imgURL = 'img/' + n + j + '_' + i + '.png';
+        $('#sai').attr('src',imgURL);
+        i = 1;
+        if(j < 4) {
+          j++;
+        } else {
+          j = 1;
+        }
+      }
+      s ++;
+    } else {
+      clearInterval(saiImg);
+      $('#sai').removeClass();
+      $('p').css('display','none');
+      s = 0;
+      i = 4;
+      $('#button').prop("disabled", false);
+    }
+  }, 70);
+}
+ 
+$(function(){
+ 
+  //ボタン押下時のイベント
+  
+  $("#button").click(function() {
+    $(this).prop("disabled", true);
+    $('#sai').addClass('bound');
+    start();
+  });
+  
+});
+$(document).on('keyup',function(e) {
+        if(e.keyCode === 13) {
+        	$("#button").click();
+	    }
+
+});
+
+</script>
